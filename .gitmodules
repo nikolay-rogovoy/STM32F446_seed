@@ -1,0 +1,6 @@
+[submodule "libs/STM32CubeF4"]
+	path = libs/STM32CubeF4
+	url = https://github.com/STMicroelectronics/STM32CubeF4.git
+[submodule "libs/tinyusb"]
+	path = libs/tinyusb
+	url = https://github.com/hathach/tinyusb

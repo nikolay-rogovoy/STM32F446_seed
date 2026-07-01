@@ -1,0 +1,44 @@
+{
+    "configurations": [
+        {
+            "name": "STM32",
+            "includePath": [
+                "${workspaceFolder}/Inc",
+                "${workspaceFolder}/Src",
+                "${workspaceFolder}/libs/tinyusb/src",
+                "${workspaceFolder}/libs/STM32CubeF4/Drivers/CMSIS/Include",
+                "${workspaceFolder}/libs/STM32CubeF4/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+                "${workspaceFolder}/libs/STM32CubeF4/Drivers/STM32F4xx_HAL_Driver/Inc",
+                "${workspaceFolder}/libs/STM32CubeF4/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+                "${workspaceFolder}/libs/FreeRTOS/include",
+                "${workspaceFolder}/libs/FreeRTOS/portable/GCC/ARM_CM4F"
+            ],
+            "defines": [
+                "STM32F446xx",
+                "USE_HAL_DRIVER",
+                "HAL_MODULE_ENABLED",
+                "HAL_DMA_MODULE_ENABLED",
+                "HAL_FLASH_MODULE_ENABLED",
+                "HAL_GPIO_MODULE_ENABLED",
+                "HAL_PWR_MODULE_ENABLED",
+                "HAL_RCC_MODULE_ENABLED",
+                "HAL_TIM_MODULE_ENABLED",
+                "HAL_UART_MODULE_ENABLED",
+                "HAL_CORTEX_MODULE_ENABLED",
+                "__weak=__attribute__((weak))",
+                "__packed=__attribute__((__packed__))"
+            ],
+            "compilerPath": "arm-none-eabi-gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm",
+            "compilerArgs": [
+                "-mcpu=cortex-m4",
+                "-mthumb",
+                "-mfloat-abi=hard",
+                "-mfpu=fpv4-sp-d16"
+            ]
+        }
+    ],
+    "version": 4
+}

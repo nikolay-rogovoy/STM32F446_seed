@@ -1,0 +1,44 @@
+{
+  "name": "@nicola/STM32F446_seed",
+  "version": "0.1.0",
+  "description": "A source xPack with <your-description-here>",
+  "main": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/<user-id>/STM32F446_seed.git"
+  },
+  "homepage": "https://github.com/<user-id>/STM32F446_seed/",
+  "bugs": {
+    "url": "https://github.com/<user-id>/STM32F446_seed/issues/"
+  },
+  "keywords": [
+    "xpack"
+  ],
+  "author": {
+    "name": "nicola",
+    "email": "nikolay.rogovoy@gmail.com",
+    "url": "<author-url>"
+  },
+  "license": "MIT",
+  "config": {},
+  "dependencies": {},
+  "devDependencies": {},
+  "xpack": {
+    "minimumXpmRequired": "0.21.4",
+    "dependencies": {},
+    "devDependencies": {},
+    "properties": {},
+    "actions": {
+      "build": "make",
+      "clean": "make clean",
+      "flash": "make flash",
+      "flash-elf": "make flash-elf",
+      "rebuild": "make clean && make",
+      "debug": "openocd -f STM32F446.cfg",
+      "monitor": "openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c \"gdb_port 3333; telnet_port 4444; init; reset halt;\"",
+      "ver": "openocd --version",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "buildConfigurations": {}
+  }
+}

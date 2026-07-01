@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug STM32F446 (External)",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/F446.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "external",
+            "gdbTarget": "localhost:3333",
+            "gdbPath": "/usr/bin/gdb-multiarch",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw",
+            "svdFile": "${workspaceFolder}/.vscode/STM32F446xx.svd"
+        }
+    ]
+}
