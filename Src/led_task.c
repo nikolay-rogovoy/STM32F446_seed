@@ -6,20 +6,20 @@
 
 void vLEDTask(void *pvParameters)
 {
-    (void)pvParameters;
-    uint32_t button_mask = 0x00000001u;
+    // (void)pvParameters;
+    // uint32_t button_mask = 0x00000001u;
 
     for (;;)
     {
         HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
 
-        usb_report_notify(button_mask);
+        // usb_report_notify(button_mask);
 
-        button_mask <<= 1;
-        if (button_mask == 0u)
-        {
-            button_mask = 0x00000001u;
-        }
+        // button_mask <<= 1;
+        // if (button_mask == 0u)
+        // {
+        //     button_mask = 0x00000001u;
+        // }
 
         vTaskDelay(pdMS_TO_TICKS(LED_TOGGLE_INTERVAL_MS));
     }
