@@ -51,6 +51,7 @@ USB_SOURCES =   $(TU_SRC)/src/tusb.c \
                 $(TU_SRC)/src/common/tusb_fifo.c \
                 $(TU_SRC)/src/device/usbd.c \
                 $(TU_SRC)/src/class/hid/hid_device.c \
+                $(TU_SRC)/src/class/cdc/cdc_device.c \
                 $(TU_SRC)/src/portable/synopsys/dwc2/dcd_dwc2.c \
                 $(TU_SRC)/src/portable/synopsys/dwc2/dwc2_common.c
 

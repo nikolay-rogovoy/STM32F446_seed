@@ -2,6 +2,7 @@
 #include "led_task.h"
 #include "usb_task.h"
 #include "usb_report_task.h"
+#include "cmd_task.h"
 #include "stm32f4xx_hal_tim.h"
 #include "usb_hid.h"
 
@@ -24,6 +25,10 @@ int main(void)
     xTaskCreate(USBTask, "USB Task", 256, NULL, 2, NULL);
     xTaskCreate(USBReportTask, "USB Report", 256, NULL, 2, NULL);
     xTaskCreate(vLEDTask, "LED", 128, NULL, 1, NULL);
+
+    TaskHandle_t xCmdTaskHandle = NULL;
+    xTaskCreate(CmdTask, "Cmd", 256, NULL, 1, &xCmdTaskHandle);
+    cmd_task_init(xCmdTaskHandle);
 
     vTaskStartScheduler();
 }

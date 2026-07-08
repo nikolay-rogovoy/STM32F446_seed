@@ -16,9 +16,11 @@ static const tusb_desc_device_t desc_device =
         .bDescriptorType = TUSB_DESC_DEVICE,
         .bcdUSB = USB_BCD,
 
-        .bDeviceClass = 0x00,
-        .bDeviceSubClass = 0x00,
-        .bDeviceProtocol = 0x00,
+        // Композитное устройство (HID + CDC) с IAD, чтобы хост
+        // корректно сгруппировал два интерфейса CDC
+        .bDeviceClass = TUSB_CLASS_MISC,
+        .bDeviceSubClass = MISC_SUBCLASS_COMMON,
+        .bDeviceProtocol = MISC_PROTOCOL_IAD,
 
         .bMaxPacketSize0 = CFG_TUD_ENDPOINT0_SIZE,
 
@@ -88,12 +90,26 @@ uint8_t const *tud_hid_descriptor_report_cb(uint8_t instance)
 
 enum
 {
+    STRID_LANGID = 0,
+    STRID_MANUFACTURER,
+    STRID_PRODUCT,
+    STRID_SERIAL,
+    STRID_CDC,
+};
+
+enum
+{
     ITF_NUM_HID = 0,
+    ITF_NUM_CDC,        // управляющий интерфейс CDC
+    ITF_NUM_CDC_DATA,   // интерфейс данных CDC (занят TUD_CDC_DESCRIPTOR)
     ITF_NUM_TOTAL
 };
 
-#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN)
-#define EPNUM_HID_IN 0x81
+#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_CDC_DESC_LEN)
+#define EPNUM_HID_IN    0x81
+#define EPNUM_CDC_NOTIF 0x82
+#define EPNUM_CDC_OUT   0x02
+#define EPNUM_CDC_IN    0x83
 #define HID_POLL_INTERVAL 2
 
 uint8_t const desc_configuration[] =
@@ -113,7 +129,17 @@ uint8_t const desc_configuration[] =
             sizeof(desc_hid_report),
             EPNUM_HID_IN,
             CFG_TUD_HID_EP_BUFSIZE,
-            HID_POLL_INTERVAL)};
+            HID_POLL_INTERVAL),
+
+        // CDC: notif EP (8 байт), OUT/IN по 64 байта
+        TUD_CDC_DESCRIPTOR(
+            ITF_NUM_CDC,
+            STRID_CDC,
+            EPNUM_CDC_NOTIF,
+            8,
+            EPNUM_CDC_OUT,
+            EPNUM_CDC_IN,
+            64)};
 
 uint8_t const *tud_descriptor_configuration_cb(uint8_t index)
 {
@@ -124,14 +150,6 @@ uint8_t const *tud_descriptor_configuration_cb(uint8_t index)
 //--------------------------------------------------------------------+
 // String Descriptors
 //--------------------------------------------------------------------+
-
-enum
-{
-    STRID_LANGID = 0,
-    STRID_MANUFACTURER,
-    STRID_PRODUCT,
-    STRID_SERIAL,
-};
 
 static const char *string_desc_arr[] =
     {
