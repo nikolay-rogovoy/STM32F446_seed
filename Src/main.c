@@ -3,6 +3,7 @@
 #include "usb_task.h"
 #include "usb_report_task.h"
 #include "cmd_task.h"
+#include "app_config.h"
 #include "stm32f4xx_hal_tim.h"
 #include "usb_hid.h"
 
@@ -18,6 +19,8 @@ int main(void)
     HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
     SystemClock_Config();
     MX_GPIO_Init();
+
+    app_config_init();
 
     usb_device_init();
     usb_report_init();

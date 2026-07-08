@@ -45,7 +45,9 @@ HAL_SOURCES = $(HAL_SRC)/stm32f4xx_hal.c \
               $(HAL_SRC)/stm32f4xx_hal_dma.c \
               $(HAL_SRC)/stm32f4xx_hal_dma_ex.c \
               $(HAL_SRC)/stm32f4xx_hal_tim.c \
-              $(HAL_SRC)/stm32f4xx_hal_tim_ex.c
+              $(HAL_SRC)/stm32f4xx_hal_tim_ex.c \
+              $(HAL_SRC)/stm32f4xx_hal_flash.c \
+              $(HAL_SRC)/stm32f4xx_hal_flash_ex.c
 
 USB_SOURCES =   $(TU_SRC)/src/tusb.c \
                 $(TU_SRC)/src/common/tusb_fifo.c \

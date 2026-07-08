@@ -1,6 +1,8 @@
 #include "cmd_task.h"
+#include "app_config.h"
 #include "tusb.h"
 
+#include <stdio.h>
 #include <string.h>
 
 /* Кольцевой буфер приёма: пишет tud_cdc_rx_cb (контекст USBTask),
@@ -96,6 +98,32 @@ static void cmd_send_response(const char *str)
     tud_cdc_write_flush();
 }
 
+static void cmd_show_config(void)
+{
+    const app_config_t *cfg = app_config_get();
+    char buf[160];
+
+    snprintf(buf, sizeof(buf),
+             "Ok:magic=0x%08lX;version=%lu;extra_info=%s\r\n",
+             (unsigned long)cfg->magic,
+             (unsigned long)cfg->version,
+             cfg->extra_info);
+
+    cmd_send_response(buf);
+}
+
+static void cmd_save_config(void)
+{
+    if (app_config_save(app_config_get()))
+    {
+        cmd_send_response("Ok\r\n");
+    }
+    else
+    {
+        cmd_send_response("Err:flash write failed\r\n");
+    }
+}
+
 /* Разбор одной завершённой команды вида "имя:параметры" (без конца строки) */
 static void cmd_process_line(char *line)
 {
@@ -116,6 +144,14 @@ static void cmd_process_line(char *line)
     if (strcmp(line, "Test") == 0)
     {
         cmd_send_response("Ok\r\n");
+    }
+    else if (strcmp(line, "ShowConfig") == 0)
+    {
+        cmd_show_config();
+    }
+    else if (strcmp(line, "SaveConfig") == 0)
+    {
+        cmd_save_config();
     }
     else
     {
