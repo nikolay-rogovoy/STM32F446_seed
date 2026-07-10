@@ -1,6 +1,7 @@
 #include <string.h>
 #include "tusb.h"
 #include "usb_descriptors.h"
+#include "stm32f4xx_hal.h"
 
 //--------------------------------------------------------------------+
 // USB Device Descriptor
@@ -156,14 +157,34 @@ static const char *string_desc_arr[] =
         (const char[]){0x09, 0x04},
         "Nikolay Rogovoy",
         "F446 Gamepad",
-        // TODO: заменить на серийный номер, сгенерированный из уникального ID чипа (UID).
-        // STM32F4: три 32-битных слова по адресу 0x1FFF7A10 (96 бит).
-        // tud_descriptor_string_cb должна формировать строку динамически через HAL_GetUIDw0/1/2()
-        // и возвращать её напрямую, минуя string_desc_arr.
-        "0001",
+        // STRID_SERIAL формируется динамически из UID чипа (см. tud_descriptor_string_cb).
+        // Здесь оставлен NULL, чтобы индексы строк совпадали с enum STRID_*.
+        NULL,
 };
 
 static uint16_t _desc_str[32];
+
+// Формирует серийный номер из 96-битного уникального ID чипа (три 32-битных слова
+// по адресу 0x1FFF7A10). Пишет 24 шестнадцатеричных символа прямо в _desc_str,
+// начиная с _desc_str[1], и возвращает их количество.
+static uint8_t board_serial_utf16(void)
+{
+    const uint32_t uid[3] = {HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2()};
+    static const char hex[] = "0123456789ABCDEF";
+
+    uint8_t chr_count = 0;
+    for (uint8_t w = 0; w < 3; w++)
+    {
+        // Старший ниббл первым, чтобы строка читалась как обычное hex-число
+        for (int8_t shift = 28; shift >= 0; shift -= 4)
+        {
+            _desc_str[1 + chr_count] = hex[(uid[w] >> shift) & 0x0F];
+            chr_count++;
+        }
+    }
+
+    return chr_count; // 3 слова * 8 нибблов = 24 символа
+}
 
 uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid)
 {
@@ -175,6 +196,10 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid)
     {
         _desc_str[1] = 0x0409;
         chr_count = 1;
+    }
+    else if (index == STRID_SERIAL)
+    {
+        chr_count = board_serial_utf16();
     }
     else
     {
